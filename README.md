@@ -44,7 +44,10 @@ A: Your highest level not dead character
   
 Q: Why does it hang on Searching ... <br>
 A: Check you command line window, if it has errors, then the API request fails. Example you mistyped the league or race 
-name. If not, then you might not have a character in that league.
+name. If not, then you might not have a living character in that league's top 15000.
+
+Q: I don't like the setup you have. Can I modify it?<br>
+A: Yes to some extend. Please check the application.conf file comments. You can modify a few things.
 
 ## Feedback 
 
