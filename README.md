@@ -49,6 +49,9 @@ name. If not, then you might not have a living character in that league's top 15
 Q: I don't like the setup you have. Can I modify it?<br>
 A: Yes to some extend. Please check the application.conf file comments. You can modify a few things.
 
+Q: How can I shut down the application?<br>
+A: Close the command line window running sbt or press Ctrl+C there.
+
 ## Feedback 
 
 Any question, request, feedback is welcome. Please use the Issues 
