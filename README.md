@@ -9,7 +9,8 @@ Created for my own liking, you are welcome to try to see if its useful for you.
 
 ## Prerequisites
 
-You will need to install sbt and the POE font set to run it as intended.  
+You will need to install sbt and the POE font set to run it as intended. You need to run POE in windowed mode to see 
+the HUD.  
 
 ## Installing
 
