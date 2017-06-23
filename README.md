@@ -32,12 +32,19 @@ Remark: this will take very long (up to 10 minutes) on the first go, when sbt do
 
 ## FAQ
 
-Q: Can I modify the config file on the fly? 
-A: No, you have to restart the application. 
+Q: Can I modify the config file on the fly?<br> 
+A: No, you have to restart the application.
 
-Q: How often it is refreshing data?
+Q: How often it is refreshing data?<br>
 A: Every 30 seconds or as long as one API request cycle completes. This depends on your location, and your
  ladder position. From Europe I get about 200 positions every second.
+ 
+Q: In the config file I am only filling my account name. Which character will the HUD show?<br>
+A: Your highest level not dead character
+  
+Q: Why does it hang on Searching ... <br>
+A: Check you command line window, if it has errors, then the API request fails. Example you mistyped the league or race 
+name. If not, then you might not have a character in that league.
 
 ## Feedback 
 
