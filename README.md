@@ -1,7 +1,11 @@
 # Path of Exile Racing HUD
 
 A HUD for Path of Exile. You can get league or race stats for your character.
-Created for my own liking, you are welcome to try to see if its useful for you. 
+Created for my own liking, you are welcome to try to see if its useful for you.
+ 
+## Screenshot
+ 
+* [Screenshot](http://imgur.com/a/PivRu)  
 
 ## Prerequisites
 
