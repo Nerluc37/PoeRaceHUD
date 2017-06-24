@@ -3,6 +3,14 @@
 A HUD for Path of Exile. You can get league or race stats for your character.
 Created for my own liking, you are welcome to try to see if its useful for you.
  
+## Current version 
+ 
+v1.1
+ 
+## Patch notes
+ 
+* [Patch notes](PATCH.md) 
+ 
 ## Screenshot
  
 * [Screenshot](http://imgur.com/a/PivRu)  
