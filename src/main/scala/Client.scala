@@ -46,7 +46,7 @@ object Client extends ConfLoader {
     }
 
     var toDisp = new ListBuffer[String]()
-    if (myPlayer.rank == -1) {
+    if (myPlayer.rank == -1 && raceState == null) {
       toDisp += "You have no living character on the rankings"
     } else {
       toDisp += s"${myPlayer.character.name} (${myPlayer.character.level} ${myPlayer.character.`class`})"
