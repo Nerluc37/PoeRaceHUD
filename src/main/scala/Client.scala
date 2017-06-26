@@ -90,7 +90,7 @@ object Client extends ConfLoader {
   }
 
   def callAPI(i: Int): (Map[String, Int], Map[String, Int], Boolean) = {
-    println(i)
+    //println(i)
     val response = http(GET(s"${url}${encode(conf.getString("league-name"), "utf-8")}?limit=200&offset=${i * 200}"))
     if (response.status.toString != "OK") throw new APIResponseException(s"API Request failed: ${response.status}")
     val doc = parse(response.entity.getOrElse("").toString).getOrElse(Json.Null)
