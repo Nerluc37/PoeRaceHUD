@@ -52,7 +52,7 @@ object Client extends ConfLoader {
       toDisp += s"${myPlayer.character.name} (${myPlayer.character.level} ${myPlayer.character.`class`})"
       val myClass = changeClass(myPlayer.character).`class`
       raceState = CurrentPos(myPlayer.rank, collectorCla.get(myClass).getOrElse(0) + 1,
-        collectorCla.get(myPlayer.character.`class`).getOrElse(0) + 1)
+        collectorAsc.get(myPlayer.character.`class`).getOrElse(0) + 1)
       if (positionFeatureOn) {
         val raceChange = if (posQueue.isEmpty) CurrentPos(0, 0, 0) else {
           val front = posQueue.front
@@ -90,6 +90,7 @@ object Client extends ConfLoader {
   }
 
   def callAPI(i: Int): (Map[String, Int], Map[String, Int], Boolean) = {
+    println(i)
     val response = http(GET(s"${url}${encode(conf.getString("league-name"), "utf-8")}?limit=200&offset=${i * 200}"))
     if (response.status.toString != "OK") throw new APIResponseException(s"API Request failed: ${response.status}")
     val doc = parse(response.entity.getOrElse("").toString).getOrElse(Json.Null)
