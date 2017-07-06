@@ -1,13 +1,18 @@
 import io.circe.Json
 import io.shaka.http.Http.http
 import io.shaka.http.Request.GET
-import io.circe._, io.circe.parser._
+import io.circe._
+import io.circe.parser._
 import io.circe.generic.semiauto._
+
 import scalaz._
 import Scalaz._
 import java.util.concurrent._
+
 import scala.collection.mutable.ListBuffer
 import java.net.URLEncoder.encode
+
+import scala.collection.immutable.ListMap
 
 /**
   * Created by David on 16-Jun-17.
@@ -31,19 +36,23 @@ object Client extends ConfLoader {
   var raceState: CurrentPos = null
   var posQueue = new scala.collection.mutable.Queue[CurrentPos]
   var myPlayer = new Player(-1, true, false, new Character("", 1, "Unknown", 0), new Account(myName))
+  var cMap = Map[String, Player]()
 
   def stuff(window: TextWindowBuilder) = {
     myPlayer = new Player(-1, true, false, new Character("", 1, "Unknown", 0), new Account(myName))
     var i = 0;
     var result = callAPI(i)
-    var collectorAsc = result._1
-    var collectorCla = result._2
-    while (!result._3 && i < 74) {
+    while (!result && i < 74) {
       i = i + 1
       result = callAPI(i)
-      collectorAsc = collectorAsc |+| result._1
-      collectorCla = collectorCla |+| result._2
     }
+
+    val s = cMap.toSeq.sortWith { case ((_, m1), (_, m2)) =>
+        if (m1.character.experience > m2.character.experience) true
+        else if (m1.character.experience == m2.character.experience && m1.rank < m2.rank) true else false
+    }
+    val ascList = s.filter(x => x._2.character.`class` == myPlayer.character.`class`)
+    val claList = s.filter(x => changeClass(x._2.character).`class` == changeClass(myPlayer.character).`class`)
 
     var toDisp = new ListBuffer[String]()
     if (myPlayer.rank == -1 && raceState == null) {
@@ -51,8 +60,7 @@ object Client extends ConfLoader {
     } else {
       toDisp += s"${myPlayer.character.name} (${myPlayer.character.level} ${myPlayer.character.`class`})"
       val myClass = changeClass(myPlayer.character).`class`
-      raceState = CurrentPos(myPlayer.rank, collectorCla.get(myClass).getOrElse(0) + 1,
-        collectorAsc.get(myPlayer.character.`class`).getOrElse(0) + 1)
+      raceState = CurrentPos(myPlayer.rank, claList.indexOf((myPlayer.character.name, myPlayer)) + 1, ascList.indexOf((myPlayer.character.name, myPlayer)) + 1)
       if (positionFeatureOn) {
         val raceChange = if (posQueue.isEmpty) CurrentPos(0, 0, 0) else {
           val front = posQueue.front
@@ -89,33 +97,23 @@ object Client extends ConfLoader {
     }
   }
 
-  def callAPI(i: Int): (Map[String, Int], Map[String, Int], Boolean) = {
-    //println(i)
+  def callAPI(i: Int):  Boolean = {
     val response = http(GET(s"${url}${encode(conf.getString("league-name"), "utf-8")}?limit=200&offset=${i * 200}"))
     if (response.status.toString != "OK") throw new APIResponseException(s"API Request failed: ${response.status}")
     val doc = parse(response.entity.getOrElse("").toString).getOrElse(Json.Null)
     getData(doc)
   }
 
-  def getData(json: Json): (Map[String, Int], Map[String, Int], Boolean) = {
+  def getData(json: Json): Boolean = {
     val cursor: HCursor = json.hcursor
     val players: Decoder.Result[List[Player]] = cursor.downField("entries").as[List[Player]]
     val ascendancyList = players.getOrElse(Nil)
-    val classList = ascendancyList.map(p => p.copy(character = changeClass(p.character)))
+    ascendancyList.map(x => cMap += (x.character.name -> x))
     val myPlayerList = ascendancyList.filter(p => p.account.name == myName && !p.dead)
     if (myPlayerList.length > 0) {
       myPlayer = myPlayerList.head
     }
-    val ascBetter = if (myPlayer.rank > 0) ascendancyList.filter(p => p.rank < myPlayer.rank) else ascendancyList
-    val claBetter = if (myPlayer.rank > 0) classList.filter(p => p.rank < myPlayer.rank) else classList
-    val a = for {
-      e <- ascBetter
-    } yield e.character.`class`
-    val c = for {
-      e <- claBetter
-    } yield e.character.`class`
-    (a.groupBy(item => item).map(i => (i._1, i._2.length)), c.groupBy(item => item).map(i => (i._1, i._2.length)),
-      myPlayer.rank > 0)
+    myPlayer.rank > 0
   }
 
   def changeClass(c: Character): Character = c.`class` match {
