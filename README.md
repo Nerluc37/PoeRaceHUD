@@ -5,7 +5,7 @@ Created for my own liking, you are welcome to try to see if its useful for you.
  
 ## Current version 
  
-v1.1
+v1.2
  
 ## Patch notes
  
