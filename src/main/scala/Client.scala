@@ -69,7 +69,7 @@ object Client extends ConfLoader {
         toDisp += s"Overall rank: ${myPlayer.rank} (${dispPosChange(raceChange.rank)})"
         toDisp += s"Class rank (${myClass}): ${raceState.claRank} (${dispPosChange(raceChange.claRank)})"
         toDisp += s"Ascendancy rank (${myPlayer.character.`class`}): ${raceState.ascRank} " +
-          s"(${dispPosChange(raceChange.claRank)})"
+          s"(${dispPosChange(raceChange.ascRank)})"
       } else {
         toDisp += s"Overall rank: ${myPlayer.rank}"
         toDisp += s"Class rank (${myClass}): ${raceState.claRank}"
