@@ -19,3 +19,4 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic" % "0.8.0",
   "io.circe" %% "circe-jawn" % "0.8.0"
 )
+

@@ -1,5 +1,5 @@
 import io.circe.Json
-import io.shaka.http.Http.http
+import io.shaka.http.Http.{Timeout, http}
 import io.shaka.http.Request.GET
 import io.circe._
 import io.circe.parser._
@@ -12,7 +12,7 @@ import java.util.concurrent._
 import scala.collection.mutable.ListBuffer
 import java.net.URLEncoder.encode
 
-import scala.collection.immutable.ListMap
+
 
 /**
   * Created by David on 16-Jun-17.
@@ -98,7 +98,10 @@ object Client extends ConfLoader {
   }
 
   def callAPI(i: Int):  Boolean = {
+    print(i)
+    implicit val timeout = Timeout(300000)
     val response = http(GET(s"${url}${encode(conf.getString("league-name"), "utf-8")}?limit=200&offset=${i * 200}"))
+    println(s" ${response.status}")
     if (response.status.toString != "OK") throw new APIResponseException(s"API Request failed: ${response.status}")
     val doc = parse(response.entity.getOrElse("").toString).getOrElse(Json.Null)
     getData(doc)
